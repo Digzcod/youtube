@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 import { CiSearch } from "react-icons/ci";
 import yt_logo from "../assets/yt_logo/YT.png";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,6 +32,7 @@ const Head = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedItem, setSelectedItem] = useState(-1);
   const scrollSuggestionsRef = useRef(null);
+  const searchBoxRef = useRef(null);
   const navigate = useNavigate();
   const [userSelected, setUserSelected] = useState(false);
 
@@ -65,11 +72,13 @@ const Head = () => {
   const handChangeInput = (e) => {
     setSearchQuery(e.target.value);
     setShowSuggestions(true);
+    setFreeze(false);
+    // scrollSuggestionsRef.current = document.getElementById("suggestion-list");
 
     const inputValue = e.target.value.trim(); // Trim input value
     if (inputValue.length > 0) {
       // Check if at least two characters are typed
-      if (!userSelected) {
+      if (!userSelected && searchQuery !== undefined) {
         getSearchQuery();
       } else {
         setUserSelected(false);
@@ -77,6 +86,34 @@ const Head = () => {
     } else {
       setSuggestions([]); // Clear suggestions if less than two characters
       if (!freeze) setFreeze(true);
+      setSelectedItem(-1)
+    }
+  
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScrollDown);
+    window.addEventListener("click", handleClickOutside);
+    return () => {
+      window.removeEventListener("scroll", handleScrollDown);
+      window.removeEventListener("click", handleClickOutside);
+    };
+  }, [scrollSuggestionsRef, searchBoxRef]);
+
+  const handleScrollDown = () => {
+    if (scrollSuggestionsRef.current) {
+      const { top } = scrollSuggestionsRef.current.getBoundingClientRect();
+      if (top < window.innerHeight) setShowSuggestions(false);
+    }
+  };
+
+  const handleClickOutside = (event) => {
+    if (
+      (!scrollSuggestionsRef.current ||
+        !scrollSuggestionsRef.current.contains(event.target)) &&
+      (!searchBoxRef.current || !searchBoxRef.current.contains(event.target))
+    ) {
+      setShowSuggestions(false); // Close suggestion list if clicked outside of it
     }
   };
 
@@ -91,33 +128,9 @@ const Head = () => {
     setSelectedItem(-1);
   };
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScrollDown);
-    window.addEventListener("click", handleClickOutside);
-    return () => {
-      window.removeEventListener("scroll", handleScrollDown);
-      window.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
-
-  const handleScrollDown = () => {
-    if (scrollSuggestionsRef.current) {
-      const { top } = scrollSuggestionsRef.current.getBoundingClientRect();
-      if (top < window.innerHeight) setShowSuggestions(false);
-    }
-  };
-  const handleClickOutside = (event) => {
-    if (
-      scrollSuggestionsRef.current &&
-      !scrollSuggestionsRef.current.contains(event.target)
-    ) {
-      setShowSuggestions(false); // Close suggestion list if clicked outside of it
-    }
-  };
-
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
-      const formattedQuery = searchQuery.trim().replace(/\s+/g, "+");
+      const formattedQuery = searchQuery.trim().replace(/\s+/g, "-");
       navigate(`search-result?videos=${formattedQuery}`);
     }
   };
@@ -151,13 +164,19 @@ const Head = () => {
     [handChangeInput, handleMouseEffect]
   );
 
+  
+
   const handleSearchResult = (selectedSuggestion, index) => {
-    const formattedQuery = selectedSuggestion.trim().replace(/\s+/g, "+");
+    // const formattedQuery = selectedSuggestion.trim().replace(/\s+/g, "-");
     // Update search query with selected suggestion
+    // navigate(`search-result?videos=${formattedQuery}`);
     setSearchQuery(selectedSuggestion);
     setSelectedItem(index);
     setShowSuggestions(false);
-    navigate(`search-result?videos=${formattedQuery}`);
+    if(selectedItem === 0) {
+      setSelectedItem(index);
+    }
+    handleSearch()
   };
 
   function handleMenuToggle() {
@@ -184,14 +203,17 @@ const Head = () => {
       <div>
         <div className="flex items-center">
           <input
+            ref={searchBoxRef}
+            type="search"
             className="w-[30rem] h-[2.5rem] py-[auto] pl-[1.5rem] pr-2 border rounded-l-full outline-none"
+            id="suggestion-list"
             placeholder="Search"
-            type="text"
             value={searchQuery}
             onChange={handChangeInput}
             onFocus={() => setShowSuggestions(true)}
             // onBlur={() => setShowSuggestions(false)}
             onKeyDown={handleKeysDown}
+            onClick={()=>setShowSuggestions(true)}
           />
           <button className={backgroundEffect} onClick={() => handleSearch()}>
             <CiSearch className=" text-2xl text-gray-500" />
@@ -203,10 +225,11 @@ const Head = () => {
         </div>
         {showSuggestions && searchQuery !== "" && (
           <div
-            className="fixed bg-slate-50 w-[30.5rem] mt-2 px-1 py-3 rounded-md pb-4"
             ref={scrollSuggestionsRef}
+            className="fixed bg-slate-50 w-[30.5rem] mt-2 px-1 py-3 rounded-md pb-4"
             onMouseEnter={handleMouseEffect}
             onMouseLeave={handleMouseLeaveEffect}
+            // id="suggestion-list"
           >
             {suggestions.map((data, index) => (
               <ul
