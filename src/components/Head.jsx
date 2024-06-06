@@ -3,7 +3,6 @@ import React, {
   useRef,
   useState,
   useCallback,
-  useMemo,
 } from "react";
 import { CiSearch } from "react-icons/ci";
 import yt_logo from "../assets/yt_logo/YT.png";
@@ -34,7 +33,7 @@ const Head = () => {
   const scrollSuggestionsRef = useRef(null);
   const searchBoxRef = useRef(null);
   const navigate = useNavigate();
-  const [userSelected, setUserSelected] = useState(false);
+  const [userSelected, setUserSelected] = useState(true);
 
   const cacheSearchResultsOutput = useSelector(
     (store) => store.cacheSearchResults
@@ -72,12 +71,9 @@ const Head = () => {
   const handChangeInput = (e) => {
     setSearchQuery(e.target.value);
     setShowSuggestions(true);
-    setFreeze(false);
-    // scrollSuggestionsRef.current = document.getElementById("suggestion-list");
 
     const inputValue = e.target.value.trim(); // Trim input value
     if (inputValue.length > 0) {
-      // Check if at least two characters are typed
       if (!userSelected && searchQuery !== undefined) {
         getSearchQuery();
       } else {
@@ -86,9 +82,8 @@ const Head = () => {
     } else {
       setSuggestions([]); // Clear suggestions if less than two characters
       if (!freeze) setFreeze(true);
-      setSelectedItem(-1)
+      setSelectedItem(-1);
     }
-  
   };
 
   useEffect(() => {
@@ -121,7 +116,6 @@ const Head = () => {
     setSelectedItem(index);
     setSearchQuery(suggestions[index]);
     setUserSelected(true);
-    handleMouseEffect;
   };
 
   const handleMouseLeaveEffect = () => {
@@ -139,14 +133,12 @@ const Head = () => {
     (e) => {
       if (e.key === "ArrowUp" && selectedItem > 0) {
         setSelectedItem((prev) => prev - 1);
-        setFreeze(true);
         setSearchQuery(suggestions[selectedItem - 1]);
         setUserSelected(true);
         e.preventDefault();
       }
       if (e.key === "ArrowDown" && selectedItem < suggestions.length - 1) {
         setSelectedItem((prev) => prev + 1);
-        setFreeze(true);
         setSearchQuery(suggestions[selectedItem + 1]);
         setUserSelected(true);
         e.preventDefault();
@@ -164,19 +156,14 @@ const Head = () => {
     [handChangeInput, handleMouseEffect]
   );
 
-  
-
   const handleSearchResult = (selectedSuggestion, index) => {
-    // const formattedQuery = selectedSuggestion.trim().replace(/\s+/g, "-");
-    // Update search query with selected suggestion
-    // navigate(`search-result?videos=${formattedQuery}`);
     setSearchQuery(selectedSuggestion);
     setSelectedItem(index);
     setShowSuggestions(false);
-    if(selectedItem === 0) {
+    if (selectedItem === 0) {
       setSelectedItem(index);
     }
-    handleSearch()
+    handleSearch();
   };
 
   function handleMenuToggle() {
@@ -213,7 +200,7 @@ const Head = () => {
             onFocus={() => setShowSuggestions(true)}
             // onBlur={() => setShowSuggestions(false)}
             onKeyDown={handleKeysDown}
-            onClick={()=>setShowSuggestions(true)}
+            onClick={() => setShowSuggestions(true)}
           />
           <button className={backgroundEffect} onClick={() => handleSearch()}>
             <CiSearch className=" text-2xl text-gray-500" />
