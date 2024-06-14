@@ -23,12 +23,12 @@ const WatchPage = () => {
         className="rounded-xl"
           width="1050"
           height="600"
-          src={"https://www.youtube.com/embed/" + searchParams.get("v")}
+          src={"https://www.youtube.com/embed/" + searchParams.get("v") + "?&autoplay=1"}
           title="YouTube video player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          // referrerpolicy="strict-origin-when-cross-origin"
-          // frameborder="0"
-          allowfullscreen={true}
+          referrerPolicy="strict-origin-when-cross-origin"
+          frameBorder="0"
+          allowFullScreen={true}
         />
         <LiveChat />
       </div>

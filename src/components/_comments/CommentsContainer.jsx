@@ -5,7 +5,7 @@ import db from "../../utils/commentsDB.json"
 
 const CommentsContainer = () => {
   return (
-    <section className='m-5 p-3'>
+    <section className='m-5 p-3 shadow-none'>
       <h1 className='text-[1.3rem] font-bold'>Comments:</h1>
         <CommentList data={db} />
     </section>
