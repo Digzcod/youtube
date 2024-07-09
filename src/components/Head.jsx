@@ -35,6 +35,8 @@ const Head = () => {
   const navigate = useNavigate();
   const [userSelected, setUserSelected] = useState(true);
 
+  const query_YT = process.env.REACT_APP_CORS_PROXY + process.env.REACT_APP_YT_AUTOCOMPLETE_SEARCH_QUERY_API
+// console.log(query_YT)
   const cacheSearchResultsOutput = useSelector(
     (store) => store.cacheSearchResults
   );
@@ -58,7 +60,7 @@ const Head = () => {
 
   const getSearchQuery = useCallback(async () => {
     console.log("getSearch Query is Called");
-    const data = await fetch(YT_AUTOCOMPLETE_SEARCH_QUERY_API + searchQuery);
+    const data = await fetch(query_YT + searchQuery);
     const json = await data.json();
     setSuggestions(json[1]);
     dispatch(

@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { YOUTUBE_API_URL } from "../utils/constants";
 import VideoCard, { ForAdsVideo } from "./VideoCard";
 import { Link } from "react-router-dom";
 const VideosContainer = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const ytData= process.env.REACT_APP_YT_API_URL + process.env.REACT_APP_GOOGLE_API_KEY
+  // console.log(ytData)
+  console.log(process.env.REACT_APP_YT_AUTOCOMPLETE_SEARCH_QUERY_API)
+
   useEffect(() => {
     getVideos();
   }, []);
 
   async function getVideos() {
-    const data = await fetch(YOUTUBE_API_URL);
+    const data = await fetch(ytData);
     const json = await data.json();
     setLoading(false);
     setVideos(json?.items);
