@@ -24,12 +24,11 @@ const VideosContainer = () => {
 
   if (loading)
     return <h1 className="text-center mt-[20rem]">Hello Shimmer UI</h1>;
-  
+
   if (videos === undefined)
     return (
       <h1 className="text-center mt-[20rem]">
-        if you are seeing this message. It means the items or videos cuz the api
-        call reached the limit from YT
+        if you are seeing this message. It means the items or videos are not visible becuz the api from YT I reached the limit
       </h1>
     );
   // console.log(videos[0])
