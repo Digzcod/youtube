@@ -27,7 +27,7 @@ const VideosContainer = () => {
 
   if (videos === undefined)
     return (
-      <h1 className="text-center mt-[20rem]">
+      <h1 className="text-center mt-[20rem] font-semibold">
         if you are seeing this message. It means the items or videos are not visible becuz the api from YT I reached the limit
       </h1>
     );
