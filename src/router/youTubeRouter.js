@@ -1,5 +1,4 @@
 import {createBrowserRouter} from "react-router-dom"
-import App from "../App"
 import Body from "../components/Body"
 import { MainContainer } from "../components/MainContainer"
 import WatchPage from "../components/WatchPage"
@@ -18,17 +17,17 @@ export const youTubeRoutes =  createBrowserRouter([
                 element: <MainContainer/>
             },
             {
-                path: "watch",
+                path: "/watch",
                 element: <WatchPage/>
             },
             {
 
-                path: 'search-result',
+                path: '/search-result',
                 element: <SearchResultPage/>
             },
             {
 
-                path: 'demo',
+                path: '/demo',
                 element: <DemoPage/>
             }
         

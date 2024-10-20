@@ -12,8 +12,8 @@ const VideoCard = ({info}) => {
       <img src={thumbnails?.medium?.url} alt="thumnail"  className='rounded-md'/>
       <ul className='w-auto p-2'>
         <li className='text-lg font-semibold w-auto'>{title}</li>
-        <li>{channelTitle}</li>
-        <li>{statistics?.viewCount}</li>
+        <li className='text-sm'>{channelTitle}</li>
+        <li className='text-sm'>{statistics?.viewCount}</li>
       </ul>
     </div>
   )
